@@ -206,3 +206,8 @@ void Display::SetIcon(const char* icon) {
 
 void Display::SetChatMessage(const std::string &role, const std::string &content) {
 }
+void Display::Change_show() {
+}
+void Display::SetChatMessageTool(const std::string &role, const std::string &content){
+
+}

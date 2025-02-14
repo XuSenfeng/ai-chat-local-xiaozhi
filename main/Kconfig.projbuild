@@ -129,3 +129,19 @@ config USE_AUDIO_PROCESSING
     help
         需要 ESP32 S3 与 AFE 支持
 endmenu
+
+menu "Chat_ai_local"
+
+    config USE_CHAT_LOCAL
+        bool "使用本地的工具服务"
+        default y
+        help
+            需要启用本地的服务器
+
+    config CHAT_AI_LOCAL_URL
+        depends on USE_CHAT_LOCAL
+        string "本地服务器地址"
+        default "http://192.168.188.165:8888/"
+        help
+            Communication with the server through websocket after wake up.
+endmenu

@@ -28,6 +28,10 @@ protected:
     lv_obj_t* side_bar_ = nullptr;
     lv_obj_t* chat_message_label_ = nullptr;
 
+#if CONFIG_USE_CHAT_LOCAL
+    lv_obj_t* chat_message_label_tool = nullptr;
+#endif
+
     DisplayFonts fonts_;
 
     void InitializeBacklight(gpio_num_t backlight_pin);
@@ -47,6 +51,11 @@ public:
     void SetChatMessage(const std::string &role, const std::string &content) override;
     void SetEmotion(const std::string &emotion) override;
     void SetIcon(const char* icon) override;
+    void SetChatMessageTool(const std::string &role, const std::string &content) override;
+
+#if CONFIG_USE_CHAT_LOCAL
+    void Change_show();
+#endif
 };
 
 #endif // LCD_DISPLAY_H

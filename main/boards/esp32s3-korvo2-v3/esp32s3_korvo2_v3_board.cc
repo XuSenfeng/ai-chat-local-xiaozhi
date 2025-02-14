@@ -55,6 +55,21 @@ private:
     }
 
     void InitializeButtons() {
+#if CONFIG_USE_CHAT_LOCAL
+        boot_button_.OnLongPress([this]() {
+            auto& app = Application::GetInstance();
+            if (app.GetDeviceState() == kDeviceStateStarting && !WifiStation::GetInstance().IsConnected()) {
+                ResetWifiConfiguration();
+            }
+            app.ToggleChatState();
+        });
+
+        boot_button_.OnClick([this]() {
+            auto& app = Application::GetInstance();
+            ESP_LOGI(TAG, "Button pressed, changing state");
+            app.Change_show();
+        });
+#else 
         boot_button_.OnClick([this]() {
             auto& app = Application::GetInstance();
             if (app.GetDeviceState() == kDeviceStateStarting && !WifiStation::GetInstance().IsConnected()) {
@@ -67,6 +82,7 @@ private:
         boot_button_.OnPressUp([this]() {
             Application::GetInstance().StopListening();
         });
+#endif
     }
 
     void InitializeSt7789Display() {

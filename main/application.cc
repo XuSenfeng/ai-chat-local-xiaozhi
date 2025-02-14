@@ -336,6 +336,16 @@ void Application::Start() {
                 ESP_LOGI(TAG, ">> %s", text->valuestring);
                 Schedule([this, display, message = std::string(text->valuestring)]() {
                     display->SetChatMessage("user", message);
+#if CONFIG_USE_CHAT_LOCAL
+                    // background_task_->Schedule([this, message]() {
+                    message_t msg = {message.c_str(), display};
+                    chat_ai_.Chat_ai_Comunicate(&msg);
+                    //     if (result != NULL) {
+                    //         ESP_LOGI(TAG, "Chat AI response: %s", result);
+                    //     }
+                    // });
+
+#endif
                 });
             }
         } else if (strcmp(type->valuestring, "llm") == 0) {
@@ -356,14 +366,16 @@ void Application::Start() {
             }
         }
     });
+#if CONFIG_USE_CHAT_LOCAL
 
+#else
     // Check for new firmware version or get the MQTT broker address
     xTaskCreate([](void* arg) {
         Application* app = (Application*)arg;
         app->CheckNewVersion();
         vTaskDelete(NULL);
     }, "check_new_version", 4096 * 2, this, 1, nullptr);
-
+#endif
 
 #if CONFIG_USE_AUDIO_PROCESSING
     audio_processor_.Initialize(codec->input_channels(), codec->input_reference());
@@ -649,3 +661,12 @@ void Application::UpdateIotStates() {
         protocol_->SendIotStates(states);
     }
 }
+
+
+#if CONFIG_USE_CHAT_LOCAL
+void Application::Change_show() {
+    Display* display = Board::GetInstance().GetDisplay();
+    display->Change_show();
+
+}
+#endif

@@ -22,6 +22,10 @@
 #include "audio_processor.h"
 #endif
 
+#if CONFIG_USE_CHAT_LOCAL
+#include "chat_ai.h"
+#endif
+
 #define SCHEDULE_EVENT (1 << 0)
 #define AUDIO_INPUT_READY_EVENT (1 << 1)
 #define AUDIO_OUTPUT_READY_EVENT (1 << 2)
@@ -61,6 +65,7 @@ public:
     void StartListening();
     void StopListening();
     void UpdateIotStates();
+    void Change_show();
 
 private:
     Application();
@@ -69,6 +74,10 @@ private:
 #if CONFIG_USE_AUDIO_PROCESSING
     WakeWordDetect wake_word_detect_;
     AudioProcessor audio_processor_;
+#endif
+
+#if CONFIG_USE_CHAT_LOCAL
+    Chat_ai chat_ai_;
 #endif
     Ota ota_;
     std::mutex mutex_;
