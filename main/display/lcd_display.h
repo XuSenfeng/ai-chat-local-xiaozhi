@@ -51,9 +51,8 @@ public:
     void SetChatMessage(const std::string &role, const std::string &content) override;
     void SetEmotion(const std::string &emotion) override;
     void SetIcon(const char* icon) override;
-    void SetChatMessageTool(const std::string &role, const std::string &content) override;
-
 #if CONFIG_USE_CHAT_LOCAL
+    void SetChatMessageTool(const std::string &role, const std::string &content) override;
     void Change_show();
 #endif
 };

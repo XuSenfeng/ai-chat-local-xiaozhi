@@ -324,6 +324,7 @@ void LcdDisplay::SetIcon(const char* icon) {
     lv_label_set_text(emotion_label_, icon);
 }
 
+#if CONFIG_USE_CHAT_LOCAL
 void LcdDisplay::Change_show() {
     DisplayLockGuard lock(this);
     if (chat_message_label_tool == nullptr) {
@@ -340,3 +341,4 @@ void LcdDisplay::Change_show() {
         lv_obj_add_flag(chat_message_label_tool, LV_OBJ_FLAG_HIDDEN);
     }
 }
+#endif
