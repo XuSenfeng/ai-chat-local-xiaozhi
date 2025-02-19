@@ -13,7 +13,7 @@ public:
     Chat_ai();
     ~Chat_ai();
     void Chat_ai_Comunicate(message_t *msg);
-
+    int voice;
 private:
     // int user_id;
 };

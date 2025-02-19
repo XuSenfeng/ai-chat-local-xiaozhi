@@ -153,7 +153,7 @@ bool MqttProtocol::OpenAudioChannel() {
         }
     }
 
-    session_id_ = "";
+    session_id_ = ""; // 建立一个新的会话
 
     // 发送 hello 消息申请 UDP 通道
     std::string message = "{";

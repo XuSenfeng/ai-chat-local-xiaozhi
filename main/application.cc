@@ -336,10 +336,27 @@ void Application::Start() {
                 ESP_LOGI(TAG, ">> %s", text->valuestring);
                 Schedule([this, display, message = std::string(text->valuestring)]() {
                     display->SetChatMessage("user", message);
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
                     // background_task_->Schedule([this, message]() {
                     message_t msg = {message.c_str(), display};
                     chat_ai_.Chat_ai_Comunicate(&msg);
+                    // // 处理一个json数据
+                    // char * json_test = "{\"type\":\"iot\",\"commands\":[{\"name\":\"Speaker\",\"method\":\"SetVolume\",\"parameters\":{\"volume\": %d}}]}";
+                    // char buf[256] = {0};
+                    // chat_ai_.voice += 10;
+                    // chat_ai_.voice %= 100;
+                    // sprintf(buf, json_test, chat_ai_.voice);
+                    // printf("json_test:%s\n", buf);
+                    // cJSON* root = cJSON_Parse(buf);
+                    // if(root == NULL) {
+                    //     printf("json parse error\n");
+
+                    // }else{
+                    //     this->protocol_->on_incoming_json_(root);
+                    //     cJSON_Delete(root);
+                    // }
+
+
                     //     if (result != NULL) {
                     //         ESP_LOGI(TAG, "Chat AI response: %s", result);
                     //     }
@@ -366,7 +383,7 @@ void Application::Start() {
             }
         }
     });
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 
 #else
     // Check for new firmware version or get the MQTT broker address
@@ -663,7 +680,7 @@ void Application::UpdateIotStates() {
 }
 
 
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 void Application::Change_show() {
     Display* display = Board::GetInstance().GetDisplay();
     display->Change_show();

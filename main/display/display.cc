@@ -206,7 +206,7 @@ void Display::SetIcon(const char* icon) {
 
 void Display::SetChatMessage(const std::string &role, const std::string &content) {
 }
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 void Display::Change_show() {
 }
 void Display::SetChatMessageTool(const std::string &role, const std::string &content){

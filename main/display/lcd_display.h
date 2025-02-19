@@ -28,7 +28,7 @@ protected:
     lv_obj_t* side_bar_ = nullptr;
     lv_obj_t* chat_message_label_ = nullptr;
 
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     lv_obj_t* chat_message_label_tool = nullptr;
 #endif
 
@@ -51,7 +51,7 @@ public:
     void SetChatMessage(const std::string &role, const std::string &content) override;
     void SetEmotion(const std::string &emotion) override;
     void SetIcon(const char* icon) override;
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     void SetChatMessageTool(const std::string &role, const std::string &content) override;
     void Change_show();
 #endif

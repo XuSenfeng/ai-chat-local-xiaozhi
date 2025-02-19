@@ -143,5 +143,25 @@ menu "Chat_ai_local"
         string "本地服务器地址"
         default "http://192.168.188.165:8888/"
         help
-            Communication with the server through websocket after wake up.
+            Communication with the local server
+
+    config USE_CHAT_DIFY
+        bool "使用Dify服务"
+        default n
+        help
+            需要启用本地的服务器
+
+    config CHAT_AI_DIFY_URL
+        depends on USE_CHAT_DIFY
+        string "Dify服务器地址"
+        default "https://api.dify.ai/v1/workflows/run"
+        help
+            Communication with the Dify server
+
+    config CHAT_AI_DIFY_API_KEY
+        depends on USE_CHAT_DIFY
+        string "Dify服务器地址"
+        default "Bearer 你的API"
+        help
+            Communication with the Dify server
 endmenu

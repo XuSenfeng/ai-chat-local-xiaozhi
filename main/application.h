@@ -22,7 +22,7 @@
 #include "audio_processor.h"
 #endif
 
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 #include "chat_ai.h"
 #endif
 
@@ -76,7 +76,7 @@ private:
     AudioProcessor audio_processor_;
 #endif
 
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     Chat_ai chat_ai_;
 #endif
     Ota ota_;

@@ -205,7 +205,7 @@ private:
     }
 
     void InitializeButtons() {
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
         boot_button_.OnLongPress([this]() {
             auto& app = Application::GetInstance();
             if (app.GetDeviceState() == kDeviceStateStarting && !WifiStation::GetInstance().IsConnected()) {

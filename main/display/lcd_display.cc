@@ -205,7 +205,7 @@ void LcdDisplay::SetupUI() {
     lv_label_set_long_mode(chat_message_label_, LV_LABEL_LONG_WRAP); // 设置为自动换行模式
     lv_obj_set_style_text_align(chat_message_label_, LV_TEXT_ALIGN_CENTER, 0); // 设置文本居中对齐
 
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     chat_message_label_tool = lv_label_create(content_);
     lv_label_set_text(chat_message_label_tool, "");
     lv_obj_set_width(chat_message_label_tool, LV_HOR_RES * 0.9); // 限制宽度为屏幕宽度的 90%
@@ -257,7 +257,7 @@ void LcdDisplay::SetChatMessage(const std::string &role, const std::string &cont
     }
     lv_label_set_text(chat_message_label_, content.c_str());
 }
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 void LcdDisplay::SetChatMessageTool(const std::string &role, const std::string &content) {
     DisplayLockGuard lock(this);
     if (chat_message_label_tool == nullptr) {
@@ -324,7 +324,7 @@ void LcdDisplay::SetIcon(const char* icon) {
     lv_label_set_text(emotion_label_, icon);
 }
 
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 void LcdDisplay::Change_show() {
     DisplayLockGuard lock(this);
     if (chat_message_label_tool == nullptr) {

@@ -49,7 +49,7 @@ void Thing::Invoke(const cJSON* command) {
     auto input_params = cJSON_GetObjectItem(command, "parameters");
 
     try {
-        auto& method = methods_[method_name->valuestring];
+        auto& method = methods_[method_name->valuestring]; // 使用名字获取方法
         for (auto& param : method.parameters()) {
             auto input_param = cJSON_GetObjectItem(input_params, param.name().c_str());
             if (param.required() && input_param == nullptr) {

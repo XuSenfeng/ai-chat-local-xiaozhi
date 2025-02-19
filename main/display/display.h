@@ -22,7 +22,7 @@ public:
     virtual void ShowNotification(const std::string &notification, int duration_ms = 3000);
     virtual void SetEmotion(const std::string &emotion);
     virtual void SetChatMessage(const std::string &role, const std::string &content);
-#if CONFIG_USE_CHAT_LOCAL
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     virtual void SetChatMessageTool(const std::string &role, const std::string &content);
     virtual void Change_show();
 #endif
