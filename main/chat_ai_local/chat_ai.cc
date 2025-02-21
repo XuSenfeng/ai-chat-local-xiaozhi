@@ -260,10 +260,26 @@ void Chat_ai_Comunicate_task(void * Param){
     //解析信息
     cJSON *root = cJSON_Parse(data_buf);
     cJSON *data_j = cJSON_GetObjectItem(root, "data");
+    if(data_j == 0)
+    {
+        cJSON_Delete(root);
+        free(data_buf);
+        free(post_buffer);
+        esp_http_client_cleanup(client);
+        ESP_LOGE(TAG, "data_j is null");
+        vTaskDelete(NULL);
+    }
     cJSON *outputs_j = cJSON_GetObjectItem(data_j, "outputs");
+    if(outputs_j == 0)
+    {
+        cJSON_Delete(root);
+        free(data_buf);
+        free(post_buffer);
+        esp_http_client_cleanup(client);
+        ESP_LOGE(TAG, "outputs_j is null");
+        vTaskDelete(NULL);
+    }
     char * tool_result = cJSON_GetObjectItem(outputs_j,"text")->valuestring;
-
-
     if(tool_result != 0)
     {
         // ESP_ERR_NVS_INVALID_HANDLE 
@@ -291,7 +307,7 @@ void Chat_ai_Comunicate_task(void * Param){
 #if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 
 void Chat_ai::Chat_ai_Comunicate(message_t *msg){
-    xTaskCreate(Chat_ai_Comunicate_task, "Chat_ai_Comunicate_task", 3072, (void *)msg, 5, NULL);
+    xTaskCreate(Chat_ai_Comunicate_task, "Chat_ai_Comunicate_task", 4096, (void *)msg, 5, NULL);
 }
 
 #endif

@@ -212,3 +212,19 @@ void Display::Change_show() {
 void Display::SetChatMessageTool(const std::string &role, const std::string &content){
 }
 #endif
+#if CONFIG_USE_PERSONALIZED
+void Display::DisplayBrightnessReset(void){
+}
+void Display::DisplayBrightnessSetDefalutTime(int time){
+}
+void Display::DisplayBrightnessSetDefalutLight(int light){
+}
+int Display::DisplayBrightnessGetDefalutLight(void){
+    return -1;
+}
+int Display::DisplayBrightnessGetDefalutTime(void){
+    return -1;
+}
+void Display::DisplayBrightnessKeep(void){
+}
+#endif

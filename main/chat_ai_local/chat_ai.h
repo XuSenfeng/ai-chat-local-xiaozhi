@@ -7,7 +7,6 @@ typedef struct {
     Display* display;
 }message_t;
 
-// #define CONFIG_USE_CHAT_LOCAL 1
 class Chat_ai {
 public:
     Chat_ai();

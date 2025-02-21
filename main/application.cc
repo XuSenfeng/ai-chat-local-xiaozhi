@@ -337,31 +337,8 @@ void Application::Start() {
                 Schedule([this, display, message = std::string(text->valuestring)]() {
                     display->SetChatMessage("user", message);
 #if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
-                    // background_task_->Schedule([this, message]() {
                     message_t msg = {message.c_str(), display};
                     chat_ai_.Chat_ai_Comunicate(&msg);
-                    // // 处理一个json数据
-                    // char * json_test = "{\"type\":\"iot\",\"commands\":[{\"name\":\"Speaker\",\"method\":\"SetVolume\",\"parameters\":{\"volume\": %d}}]}";
-                    // char buf[256] = {0};
-                    // chat_ai_.voice += 10;
-                    // chat_ai_.voice %= 100;
-                    // sprintf(buf, json_test, chat_ai_.voice);
-                    // printf("json_test:%s\n", buf);
-                    // cJSON* root = cJSON_Parse(buf);
-                    // if(root == NULL) {
-                    //     printf("json parse error\n");
-
-                    // }else{
-                    //     this->protocol_->on_incoming_json_(root);
-                    //     cJSON_Delete(root);
-                    // }
-
-
-                    //     if (result != NULL) {
-                    //         ESP_LOGI(TAG, "Chat AI response: %s", result);
-                    //     }
-                    // });
-
 #endif
                 });
             }
@@ -421,8 +398,8 @@ void Application::Start() {
         });
     });
 
-    wake_word_detect_.OnWakeWordDetected([this](const std::string& wake_word) {
-        Schedule([this, &wake_word]() {
+    wake_word_detect_.OnWakeWordDetected([this, display](const std::string& wake_word) {
+        Schedule([this, display, &wake_word]() {
             if (device_state_ == kDeviceStateIdle) {
                 SetDeviceState(kDeviceStateConnecting);
                 wake_word_detect_.EncodeWakeWordData();
@@ -443,7 +420,7 @@ void Application::Start() {
                 protocol_->SendWakeWordDetected(wake_word);
                 ESP_LOGI(TAG, "Wake word detected: %s", wake_word.c_str());
                 keep_listening_ = true;
-                SetDeviceState(kDeviceStateListening);
+                SetDeviceState(kDeviceStateListening); // 开启背光
             } else if (device_state_ == kDeviceStateSpeaking) {
                 AbortSpeaking(kAbortReasonWakeWordDetected);
             }
@@ -627,8 +604,14 @@ void Application::SetDeviceState(DeviceState state) {
 #ifdef CONFIG_USE_AUDIO_PROCESSING
             audio_processor_.Stop();
 #endif
+#if CONFIG_USE_PERSONALIZED
+            display->DisplayBrightnessReset();
+#endif
             break;
         case kDeviceStateConnecting:
+#if CONFIG_USE_PERSONALIZED       
+            display->DisplayBrightnessKeep();
+#endif
             display->SetStatus("连接中...");
             break;
         case kDeviceStateListening:
@@ -639,6 +622,9 @@ void Application::SetDeviceState(DeviceState state) {
 #if CONFIG_USE_AUDIO_PROCESSING
             audio_processor_.Start();
 #endif
+#if CONFIG_USE_PERSONALIZED
+            display->DisplayBrightnessKeep();
+#endif
             UpdateIotStates();
             break;
         case kDeviceStateSpeaking:
@@ -646,6 +632,9 @@ void Application::SetDeviceState(DeviceState state) {
             ResetDecoder();
 #if CONFIG_USE_AUDIO_PROCESSING
             audio_processor_.Stop();
+#endif
+#if CONFIG_USE_PERSONALIZED
+            display->DisplayBrightnessKeep();
 #endif
             break;
         default:
@@ -684,6 +673,8 @@ void Application::UpdateIotStates() {
 void Application::Change_show() {
     Display* display = Board::GetInstance().GetDisplay();
     display->Change_show();
-
+#if CONFIG_USE_PERSONALIZED
+    display->DisplayBrightnessReset();
+#endif
 }
 #endif

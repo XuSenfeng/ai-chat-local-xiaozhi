@@ -26,6 +26,14 @@ public:
     virtual void SetChatMessageTool(const std::string &role, const std::string &content);
     virtual void Change_show();
 #endif
+#if CONFIG_USE_PERSONALIZED
+    virtual void DisplayBrightnessReset(void);
+    virtual void DisplayBrightnessSetDefalutTime(int time);
+    virtual void DisplayBrightnessSetDefalutLight(int light);
+    virtual int DisplayBrightnessGetDefalutLight(void);
+    virtual int DisplayBrightnessGetDefalutTime(void);
+    virtual void DisplayBrightnessKeep(void);
+#endif
     virtual void SetIcon(const char* icon);
 
     int width() const { return width_; }

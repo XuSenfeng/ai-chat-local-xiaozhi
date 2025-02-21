@@ -7,6 +7,8 @@
 #include <vector>
 #include <esp_lvgl_port.h>
 #include "board.h"
+#include "lvgl.h"
+#include <esp_timer.h>
 
 #define TAG "LcdDisplay"
 #define LCD_LEDC_CH LEDC_CHANNEL_0
@@ -78,10 +80,22 @@ LcdDisplay::LcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_
     if (offset_x != 0 || offset_y != 0) {
         lv_display_set_offset(display_, offset_x, offset_y);
     }
+#if CONFIG_USE_PERSONALIZED
+    SetBacklight(defalut_light);
 
+    // 定义一个定时器结构体
+    esp_timer_create_args_t timer_args = {	
+        .callback = &DisplayBrightnessTask,	//设置回调函数
+        .arg = this,	// 设置回调函数参数
+        // 可以添加其他参数
+    };
+    esp_timer_create(&timer_args, &my_timer);	//将创建的定时器句柄存储到 my_timer 中。
+    esp_timer_start_periodic(my_timer, 1000000);	//启动定时器，周期为 1s
+#else
     SetBacklight(100);
-
+#endif
     SetupUI();
+
 }
 
 LcdDisplay::~LcdDisplay() {
@@ -108,6 +122,13 @@ LcdDisplay::~LcdDisplay() {
     if (panel_io_ != nullptr) {
         esp_lcd_panel_io_del(panel_io_);
     }
+#if CONFIG_USE_PERSONALIZED
+    // 停止定时器
+    esp_timer_stop(my_timer);
+
+    // 删除定时器
+    esp_timer_delete(my_timer);
+#endif
 }
 
 void LcdDisplay::InitializeBacklight(gpio_num_t backlight_pin) {
@@ -341,4 +362,68 @@ void LcdDisplay::Change_show() {
         lv_obj_add_flag(chat_message_label_tool, LV_OBJ_FLAG_HIDDEN);
     }
 }
+#endif
+#if CONFIG_USE_PERSONALIZED
+
+void DisplayBrightnessTask(void *arg){
+    LcdDisplay *display = (LcdDisplay *)arg;
+    DisplayLockGuard lock(display);
+    if (display->brightness_time == -1)
+    {
+        // 不需要变化状态
+        return;
+    }
+    else if(display->brightness_time == 0)
+    {
+        // 时间到关灯
+        ESP_LOGI(TAG, "Turn off the backlight");
+        display->SetBacklight(0);
+    }
+    display->brightness_time--;
+}
+
+void LcdDisplay::DisplayBrightnessReset(void)
+{
+    DisplayLockGuard lock(this);
+    if(brightness_time == -1)
+    {
+        // 亮屏
+        SetBacklight(defalut_light);
+    }
+    brightness_time = default_sleep_time;
+}
+
+void LcdDisplay::DisplayBrightnessKeep(void)
+{
+    DisplayLockGuard lock(this);
+    ESP_LOGI(TAG, "Keep the screen on");
+    // 亮屏
+    SetBacklight(defalut_light);
+    brightness_time = -1;
+}
+
+void LcdDisplay::DisplayBrightnessSetDefalutTime(int time)
+{
+    DisplayLockGuard lock(this);
+    ESP_LOGI(TAG, "Set the default sleep time to %d seconds", time);
+    default_sleep_time = time;
+}
+
+void LcdDisplay::DisplayBrightnessSetDefalutLight(int light)
+{
+    DisplayLockGuard lock(this);
+    defalut_light = light;
+    SetBacklight(defalut_light);
+}
+
+int LcdDisplay::DisplayBrightnessGetDefalutLight(void)
+{
+    return defalut_light;
+}
+
+int LcdDisplay::DisplayBrightnessGetDefalutTime(void)
+{
+    return default_sleep_time;
+}
+
 #endif

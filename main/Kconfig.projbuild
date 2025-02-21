@@ -131,37 +131,59 @@ config USE_AUDIO_PROCESSING
 endmenu
 
 menu "Chat_ai_local"
+    menu "Server Configuration"
+        config USE_CHAT_LOCAL
+            bool "使用本地的工具服务"
+            default n
+            help
+                需要启用本地的服务器
 
-    config USE_CHAT_LOCAL
-        bool "使用本地的工具服务"
+        config CHAT_AI_LOCAL_URL
+            depends on USE_CHAT_LOCAL
+            string "本地服务器地址"
+            default "http://192.168.188.165:8888/"
+            help
+                Communication with the local server
+
+        config USE_CHAT_DIFY
+            bool "使用Dify服务"
+            default y
+            help
+                需要启用本地的服务器
+
+        config CHAT_AI_DIFY_URL
+            depends on USE_CHAT_DIFY
+            string "Dify服务器地址"
+            default "https://api.dify.ai/v1/workflows/run"
+            help
+                Communication with the Dify server
+
+        config CHAT_AI_DIFY_API_KEY
+            depends on USE_CHAT_DIFY
+            string "Dify服务器地址"
+            default "Bearer 你的API"
+            help
+                Communication with the Dify server
+    endmenu
+    menu "Personalized setting"
+    config USE_PERSONALIZED
+        bool "启用个性化设置"
         default y
         help
-            需要启用本地的服务器
+            启用各种个性化设置
 
-    config CHAT_AI_LOCAL_URL
-        depends on USE_CHAT_LOCAL
-        string "本地服务器地址"
-        default "http://192.168.188.165:8888/"
+    config LCD_LIGHT_TIME
+        int "LCD 灯光时间"        
+        default 60
+        depends on USE_PERSONALIZED
         help
-            Communication with the local server
-
-    config USE_CHAT_DIFY
-        bool "使用Dify服务"
-        default n
+            LCD 灯光时间
+    
+    config LCD_LIGHT_VALUE
+        int "LCD 灯光亮度"        
+        default 20
+        depends on USE_PERSONALIZED
         help
-            需要启用本地的服务器
-
-    config CHAT_AI_DIFY_URL
-        depends on USE_CHAT_DIFY
-        string "Dify服务器地址"
-        default "https://api.dify.ai/v1/workflows/run"
-        help
-            Communication with the Dify server
-
-    config CHAT_AI_DIFY_API_KEY
-        depends on USE_CHAT_DIFY
-        string "Dify服务器地址"
-        default "Bearer 你的API"
-        help
-            Communication with the Dify server
+            LCD 灯光亮度
+    endmenu
 endmenu
