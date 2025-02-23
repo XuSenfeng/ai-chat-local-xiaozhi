@@ -230,6 +230,7 @@ void LcdDisplay::SetupUI() {
     chat_message_label_tool = lv_label_create(content_);
     lv_label_set_text(chat_message_label_tool, "");
     lv_obj_set_width(chat_message_label_tool, LV_HOR_RES * 0.9); // 限制宽度为屏幕宽度的 90%
+    lv_obj_set_height(chat_message_label_tool, LV_VER_RES * 0.9); // 限制高度为屏幕高度的 80%
     lv_label_set_long_mode(chat_message_label_tool, LV_LABEL_LONG_WRAP); // 设置为自动换行模式
     lv_obj_set_style_text_align(chat_message_label_tool, LV_TEXT_ALIGN_CENTER, 0); // 设置文本居中对齐
     lv_obj_add_flag(chat_message_label_tool, LV_OBJ_FLAG_HIDDEN);
@@ -269,6 +270,14 @@ void LcdDisplay::SetupUI() {
     battery_label_ = lv_label_create(status_bar_);
     lv_label_set_text(battery_label_, "");
     lv_obj_set_style_text_font(battery_label_, fonts_.icon_font, 0);
+
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
+    chat_message_lcd = lv_led_create(status_bar_);
+    lv_obj_set_size(chat_message_lcd, 10, 10);
+    lv_led_set_color(chat_message_lcd, lv_color_hex(0xff0000));
+    lv_led_on(chat_message_lcd);
+#endif
+
 }
 
 void LcdDisplay::SetChatMessage(const std::string &role, const std::string &content) {
@@ -285,6 +294,23 @@ void LcdDisplay::SetChatMessageTool(const std::string &role, const std::string &
         return;
     }
     lv_label_set_text(chat_message_label_tool, content.c_str());
+}
+
+void LcdDisplay::SetChatStatus(int status){
+    switch (status)
+    {
+        case 0:
+            lv_led_set_color(chat_message_lcd, lv_color_hex(0xff0000));
+            break;
+        case 1:
+            lv_led_set_color(chat_message_lcd, lv_color_hex(0xffff00));
+            break;
+        case 2:
+            lv_led_set_color(chat_message_lcd, lv_color_hex(0x00ff00));
+            break;
+        default:
+            break;
+    }
 }
 #endif
 
@@ -357,8 +383,10 @@ void LcdDisplay::Change_show() {
     if(lv_obj_has_flag(chat_message_label_tool, LV_OBJ_FLAG_HIDDEN)) {
         lv_obj_clear_flag(chat_message_label_tool, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(chat_message_label_, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
     } else {
         lv_obj_clear_flag(chat_message_label_, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(emotion_label_, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(chat_message_label_tool, LV_OBJ_FLAG_HIDDEN);
     }
 }

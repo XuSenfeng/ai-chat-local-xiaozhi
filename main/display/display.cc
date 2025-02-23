@@ -211,6 +211,8 @@ void Display::Change_show() {
 }
 void Display::SetChatMessageTool(const std::string &role, const std::string &content){
 }
+void Display::SetChatStatus(int status){
+}
 #endif
 #if CONFIG_USE_PERSONALIZED
 void Display::DisplayBrightnessReset(void){

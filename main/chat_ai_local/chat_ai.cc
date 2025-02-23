@@ -212,6 +212,8 @@ void Chat_ai_Comunicate_task(void * Param){
     char *post_buffer = NULL;
     char *data_buf = NULL; 
 
+    display->SetChatStatus(1);
+
     esp_http_client_config_t config = {
         .url = CONFIG_CHAT_AI_DIFY_URL,  // 这里替换成自己的GroupId
         .timeout_ms = 40000,
@@ -222,6 +224,7 @@ void Chat_ai_Comunicate_task(void * Param){
     
     if (post_buffer == NULL) {
         esp_http_client_cleanup(client);
+        display->SetChatStatus(0);
         vTaskDelete(NULL);
     }
     int post_len = sprintf(post_buffer, POST_DATA, text); //动态获取一内存记录信息
@@ -236,7 +239,7 @@ void Chat_ai_Comunicate_task(void * Param){
         ESP_LOGE(TAG, "Error opening connection");
         free(post_buffer);
         esp_http_client_cleanup(client);
-    
+        display->SetChatStatus(0);
         vTaskDelete(NULL);
     }
     int write_len = esp_http_client_write(client, post_buffer, post_len);
@@ -251,6 +254,7 @@ void Chat_ai_Comunicate_task(void * Param){
     if(data_buf == NULL) {
         free(post_buffer);
         esp_http_client_cleanup(client);
+        display->SetChatStatus(0);
         vTaskDelete(NULL);
     }
     data_buf[data_length] = '\0';
@@ -267,6 +271,7 @@ void Chat_ai_Comunicate_task(void * Param){
         free(post_buffer);
         esp_http_client_cleanup(client);
         ESP_LOGE(TAG, "data_j is null");
+        display->SetChatStatus(0);
         vTaskDelete(NULL);
     }
     cJSON *outputs_j = cJSON_GetObjectItem(data_j, "outputs");
@@ -277,6 +282,7 @@ void Chat_ai_Comunicate_task(void * Param){
         free(post_buffer);
         esp_http_client_cleanup(client);
         ESP_LOGE(TAG, "outputs_j is null");
+        display->SetChatStatus(0);
         vTaskDelete(NULL);
     }
     char * tool_result = cJSON_GetObjectItem(outputs_j,"text")->valuestring;
@@ -298,7 +304,7 @@ void Chat_ai_Comunicate_task(void * Param){
 
 
     display->SetChatMessageTool("tool", response_text);
-
+    display->SetChatStatus(2);
     vTaskDelete(NULL);
 }
 

@@ -25,6 +25,7 @@ public:
 #if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     virtual void SetChatMessageTool(const std::string &role, const std::string &content);
     virtual void Change_show();
+    virtual void SetChatStatus(int status);
 #endif
 #if CONFIG_USE_PERSONALIZED
     virtual void DisplayBrightnessReset(void);

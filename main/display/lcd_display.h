@@ -30,6 +30,7 @@ protected:
 
 #if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     lv_obj_t* chat_message_label_tool = nullptr;
+    lv_obj_t* chat_message_lcd = nullptr;
 #endif
 #if CONFIG_USE_PERSONALIZED
     esp_timer_handle_t my_timer;
@@ -53,6 +54,7 @@ public:
     virtual void Unlock() override;
 #if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
     void SetChatMessageTool(const std::string &role, const std::string &content) override;
+    void SetChatStatus(int status) override;
     void Change_show();
 #endif
 #if CONFIG_USE_PERSONALIZED
