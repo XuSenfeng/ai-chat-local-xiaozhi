@@ -229,4 +229,6 @@ int Display::DisplayBrightnessGetDefalutTime(void){
 }
 void Display::DisplayBrightnessKeep(void){
 }
+void Display::SetBacklight(uint8_t brightness){
+}
 #endif

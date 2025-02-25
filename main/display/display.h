@@ -34,6 +34,7 @@ public:
     virtual int DisplayBrightnessGetDefalutLight(void);
     virtual int DisplayBrightnessGetDefalutTime(void);
     virtual void DisplayBrightnessKeep(void);
+    virtual void SetBacklight(uint8_t brightness);
 #endif
     virtual void SetIcon(const char* icon);
 

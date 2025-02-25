@@ -46,7 +46,11 @@ public:
                   int width, int height,  int offset_x, int offset_y, bool mirror_x, bool mirror_y, bool swap_xy,
                   DisplayFonts fonts);
     ~LcdDisplay();
+#if CONFIG_USE_PERSONALIZED
     void SetBacklight(uint8_t brightness);
+#else 
+    void SetBacklight(uint8_t brightness) override;
+#endif
     void SetChatMessage(const std::string &role, const std::string &content) override;
     void SetEmotion(const std::string &emotion) override;
     void SetIcon(const char* icon) override;
