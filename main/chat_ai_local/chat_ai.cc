@@ -274,6 +274,28 @@ void Chat_ai_Comunicate_task(void * Param){
         display->SetChatStatus(0);
         vTaskDelete(NULL);
     }
+    // 获取status字段判断是否成功
+    char * status = cJSON_GetObjectItem(data_j,"status")->valuestring;
+    if(status == 0)
+    {
+        cJSON_Delete(root);
+        free(data_buf);
+        free(post_buffer);
+        esp_http_client_cleanup(client);
+        ESP_LOGE(TAG, "status is null");
+        display->SetChatStatus(0);
+        vTaskDelete(NULL);
+    }
+    if(strcmp(status, "failed") == 0)
+    {
+        cJSON_Delete(root);
+        free(data_buf);
+        free(post_buffer);
+        esp_http_client_cleanup(client);
+        ESP_LOGE(TAG, "status is failed");
+        display->SetChatStatus(0);
+        vTaskDelete(NULL);
+    }
     cJSON *outputs_j = cJSON_GetObjectItem(data_j, "outputs");
     if(outputs_j == 0)
     {

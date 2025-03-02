@@ -24,6 +24,7 @@ public:
         }), [this](const ParameterList& parameters) {
             auto display = Board::GetInstance().GetDisplay();
             display->SetBacklight(static_cast<uint8_t>(parameters["light"].number()));
+            display->DisplayBrightnessSetDefalutLight(parameters["light"].number());
             // printf("SetLight: %d\n", parameters["light"].number());
         });
     }

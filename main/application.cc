@@ -62,6 +62,9 @@ void Application::CheckNewVersion() {
 
     while (true) {
         if (ota_.CheckVersion()) {
+#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
+            ESP_LOGI(TAG, "Did not check for new version because of chat local or chat dify");
+#else
             if (ota_.HasNewVersion()) {
                 Alert("Info", "正在升级固件");
                 // Wait for the chat state to be idle
@@ -108,6 +111,7 @@ void Application::CheckNewVersion() {
                 display->ShowNotification("版本 " + ota_.GetCurrentVersion());
             }
             return;
+#endif
         }
 
         // Check again in 60 seconds
@@ -360,16 +364,13 @@ void Application::Start() {
             }
         }
     });
-#if CONFIG_USE_CHAT_LOCAL | CONFIG_USE_CHAT_DIFY
 
-#else
     // Check for new firmware version or get the MQTT broker address
     xTaskCreate([](void* arg) {
         Application* app = (Application*)arg;
         app->CheckNewVersion();
         vTaskDelete(NULL);
     }, "check_new_version", 4096 * 2, this, 1, nullptr);
-#endif
 
 #if CONFIG_USE_AUDIO_PROCESSING
     audio_processor_.Initialize(codec->input_channels(), codec->input_reference());
